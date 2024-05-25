@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DFS Management</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        .grid-item {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .grid-item img {
+            width: 50px;
+            height: 50px;
+        }
+        .grid-item.highlight {
+            background-color: #f0f8ff;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar">
+            <div class="p-4 pt-5">
+                <a href="#" style="font-size: 40px; text-decoration: none;">DFS</a>
+                <ul class="list-unstyled components mb-5">
+                    <li>
+                        <a href="#" onclick="showCreateForm('file')">Create File</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="deleteSelected()">Delete</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="readSelected()">Read</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="writeToFile()">Write</a>
+                    </li>
+                </ul>
+                <div class="footer">
+                    <p>Distributed File System Management Interface</p>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content" class="p-4 p-md-5">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                        <i class="fa fa-bars"></i>
+                        <span class="sr-only">Toggle Menu</span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <h2 class="mb-4">Distributed File System Management</h2>
+            <div id="main-content" class="grid-container">
+                <!-- Files will be loaded here from local storage -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        let selectedItem = null;
+
+        // Initialize fileContents from localStorage or use a default object
+        let fileContents = JSON.parse(localStorage.getItem('fileContents')) || {
+            file1: "this is contents of file1.",
+            file2: `A distributed file system is a computer file system that allows the storage of data on multiple computers linked by a network. This file system, also known as a distributed storage system, is used to securely, efficiently, and reliably store, access, and manage large volumes of files.
+
+File systems are essential components of any business because they allow for the storage and retrieval of data. Distributed file systems, on the other hand, provide a distinct set of advantages that make them an essential component of any organization’s infrastructure. As a result, organizations can reduce costs while increasing storage capacity and performance by implementing a distributed file system.`
+        };
+
+        // Load files from localStorage on page load
+        window.onload = function() {
+            loadFiles();
+        };
+
+        function loadFiles() {
+            const container = document.getElementById('main-content');
+            container.innerHTML = '';
+            for (const [name, content] of Object.entries(fileContents)) {
+                const newItem = document.createElement('div');
+                newItem.className = 'grid-item';
+                newItem.setAttribute('onclick', 'selectItem(this)');
+                newItem.setAttribute('data-type', 'file');
+                newItem.setAttribute('data-name', name);
+                newItem.innerHTML = `<img src="images/file_icon.png" alt="File Icon"><p>${name}</p>`;
+                container.appendChild(newItem);
+            }
+        }
+
+        function selectItem(element) {
+            if (selectedItem) {
+                selectedItem.classList.remove('highlight');
+            }
+            selectedItem = element;
+            selectedItem.classList.add('highlight');
+        }
+
+        function showCreateForm(type) {
+            const name = prompt(`Enter the name for the new ${type}:`);
+            if (name) {
+                setTimeout(() => {
+                    const container = document.getElementById('main-content');
+                    const newItem = document.createElement('div');
+                    newItem.className = 'grid-item';
+                    newItem.setAttribute('onclick', 'selectItem(this)');
+                    newItem.setAttribute('data-type', type);
+                    newItem.setAttribute('data-name', name);
+                    newItem.innerHTML = `<img src="images/file_icon.png" alt="File Icon"><p>${name}</p>`;
+                    container.appendChild(newItem);
+                    if (type === 'file') {
+                        fileContents[name] = "";
+                        saveToLocalStorage();
+                    }
+                }, 1000); // 1000 milliseconds = 1 second
+            }
+        }
+
+        function deleteSelected() {
+            if (selectedItem) {
+                const type = selectedItem.getAttribute('data-type');
+                const name = selectedItem.getAttribute('data-name');
+                selectedItem.parentNode.removeChild(selectedItem);
+                selectedItem = null;
+                if (type === 'file') {
+                    delete fileContents[name];
+                    saveToLocalStorage();
+                }
+            } else {
+                alert('Please select an item to delete.');
+            }
+        }
+
+        function readSelected() {
+            if (selectedItem) {
+                const type = selectedItem.getAttribute('data-type');
+                const name = selectedItem.getAttribute('data-name');
+                window.location.href = `read.html?type=${type}&name=${name}`;
+            } else {
+                alert('Please select an item to read.');
+            }
+        }
+
+        function writeToFile() {
+            if (selectedItem && selectedItem.getAttribute('data-type') === 'file') {
+                const name = selectedItem.getAttribute('data-name');
+                window.location.href = `write.html?name=${name}`;
+            } else {
+                alert('Please select a file to write to.');
+            }
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('fileContents', JSON.stringify(fileContents));
+        }
+    </script>
+</body>
+</html>

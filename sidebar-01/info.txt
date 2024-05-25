@@ -1,0 +1,3 @@
+A distributed file system is a computer file system that allows the storage of data on multiple computers linked by a network. This file system, also known as a distributed storage system, is used to securely, efficiently, and reliably store, access, and manage large volumes of files.
+
+File systems are essential components of any business because they allow for the storage and retrieval of data. Distributed file systems, on the other hand, provide a distinct set of advantages that make them an essential component of any organization’s infrastructure. As a result, organizations can reduce costs while increasing storage capacity and performance by implementing a distributed file system.

@@ -1,0 +1,4 @@
+this is the contents of fiel1.
+checking
+hello! testing
+<emd>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write to File</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar">
+            <div class="p-4 pt-5">
+                <a href="#" style="font-size: 40px; text-decoration: none;">DFS</a>
+                <ul class="list-unstyled components mb-5">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                </ul>
+                <div class="footer">
+                    <p>Distributed File System Management Interface</p>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content" class="p-4 p-md-5">
+            <h2 class="mb-4">Write to File</h2>
+            <div id="main-content">
+                <form>
+                    <div class="form-group">
+                        <label for="fileContent">File Content:</label>
+                        <textarea id="fileContent" class="form-control" rows="10"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="saveContent()">Save</button>
+                    <div id="message" style="margin-top: 10px; font-size: 20px;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const fileName = urlParams.get('name');
+        document.getElementById('fileContent').value = fileContents[fileName] || '';
+
+        function saveContent() {
+            // const content = document.getElementById('fileContent').value;
+            // fileContents[fileName] = content;
+
+            setTimeout(() => {
+                document.getElementById('message').innerText = 'The file contents have been saved.';
+                // alert('Your contents have been saved.');
+            }, 1000); // 2000 milliseconds = 2 seconds
+        }
+    </script>
+</body>
+</html>
